@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projectile Trajectory Visualizer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Projectile Trajectory Visualizer</h1>
+            <p>Calculate and visualize projectile motion on a 2D plane</p>
+        </header>
+
+        <div class="main-content">
+            <aside class="controls-panel">
+                <div class="control-group">
+                    <label for="calc-mode">Calculation Mode</label>
+                    <div class="select-wrapper">
+                        <select id="calc-mode">
+                            <option value="forward">Forward (Velocity & Angle)</option>
+                            <option value="inverse-angle">Target (Calculate Angle)</option>
+                            <option value="inverse-velocity">Target (Calculate Velocity)</option>
+                            <option value="inverse-vx">Target (Calculate from Vx)</option>
+                            <option value="inverse-time">Target (Calculate from Time)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label for="gravity">Gravity (m/s²)</label>
+                    <input type="number" id="gravity" value="9.81" min="0.1" step="0.1">
+                </div>
+
+                <div class="control-group">
+                    <label for="h0">Launch Height (m)</label>
+                    <input type="number" id="h0" value="0" step="0.1">
+                </div>
+
+                <div class="control-group">
+                    <label for="continuation-dist">Continuation Length (m)</label>
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <input type="number" id="continuation-dist" value="10" min="0" step="1" style="width: 70px;">
+                        <input type="range" id="continuation-slider" min="0" max="100" value="10" step="1"
+                            style="flex: 1;">
+                    </div>
+                </div>
+
+                <div id="inputs-container">
+                    <!-- Dynamic inputs will be injected here -->
+                </div>
+
+                <div id="formula-display" style="
+                    background: var(--input-bg);
+                    border: 1px solid var(--border-color);
+                    border-radius: 0.5rem;
+                    padding: 1rem;
+                    margin: 1rem 0;
+                    font-family: monospace;
+                    font-size: 0.9rem;
+                    color: var(--text-secondary);
+                    line-height: 1.5;
+                ">
+                    <!-- Formulas will be injected here -->
+                </div>
+
+                <button id="simulate-btn" class="primary-btn">Simulate Trajectory</button>
+
+                <div class="stats-panel" id="stats-panel" style="display: none;">
+                    <h3>Statistics</h3>
+                    <div class="stat-item">
+                        <span class="stat-label">Total Time:</span>
+                        <span class="stat-value" id="stat-time">--</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Max Height:</span>
+                        <span class="stat-value" id="stat-height">--</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Range:</span>
+                        <span class="stat-value" id="stat-range">--</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Impact Velocity:</span>
+                        <span class="stat-value" id="stat-impact-vel">--</span>
+                    </div>
+                    <div class="stat-item" id="stat-angle-container">
+                        <span class="stat-label">Angle:</span>
+                        <span class="stat-value" id="stat-angle">--</span>
+                    </div>
+
+                    <div id="solution-selector"
+                        style="display:none; margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+                        <span class="stat-label" style="display:block; margin-bottom:0.5rem;">Select Solution:</span>
+                        <div style="display:flex; gap: 1rem;">
+                            <label
+                                style="cursor:pointer; display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;">
+                                <input type="radio" name="solution" value="0" checked> High Arc
+                            </label>
+                            <label
+                                style="cursor:pointer; display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;">
+                                <input type="radio" name="solution" value="1"> Low Arc
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <main class="visualization-area">
+                <canvas id="simulation-canvas"></canvas>
+            </main>
+        </div>
+
+        <!-- Saved Trajectories Panel -->
+        <div class="saved-trajectories-panel">
+            <div class="panel-header">
+                <h3>Saved Trajectories</h3>
+                <div class="panel-actions">
+                    <button id="import-btn" class="icon-btn" title="Import from file">📂</button>
+                    <button id="export-btn" class="icon-btn" title="Export to file">💾</button>
+                    <button id="save-trajectory-btn" class="save-btn" title="Save current trajectory">Save
+                        Current</button>
+                </div>
+                <input type="file" id="import-file" accept=".json" style="display: none;">
+            </div>
+
+            <div id="saved-trajectories-list" class="trajectories-list">
+                <p class="empty-message">No saved trajectories yet</p>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
